@@ -5,45 +5,58 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.scene.text.Font;
 
 public class GameOverStage {
 	private StackPane pane;
 	private Scene scene;
 	private GraphicsContext gc;
 	private Canvas canvas;
-	private Integer condition;
+	private Integer score;
+	private Text text;
+	public final Image bg = new Image("images/background.jpg",768, 460.8,false,false);
 	
-	GameOverStage(Integer condition){
+	GameOverStage(Integer score){
 		this.pane = new StackPane();
-		this.condition = condition;
 		this.scene = new Scene(pane, GameStage.WINDOW_WIDTH,GameStage.WINDOW_HEIGHT);
 		this.canvas = new Canvas(GameStage.WINDOW_WIDTH, GameStage.WINDOW_HEIGHT);
 		this.gc = canvas.getGraphicsContext2D();
+		this.score = score;
 		this.setProperties();
+		
+		
 		
 	}
 	
 	private void setProperties(){
+
 		this.gc.setFill(Color.BLACK);										//set font color of text
 		this.gc.fillRect(0,0,GameStage.WINDOW_WIDTH,GameStage.WINDOW_HEIGHT);
+		this.gc.drawImage(this.bg,0,0);
 		Font theFont = Font.font("Times New Roman",FontWeight.BOLD,30);//set font type, style and size
-		this.gc.setFont(theFont);											
+		this.gc.setFont(theFont);
+		String score = " "+ this.score;
+		text = new Text(160 ,55 , score);
+		text.setFont(Font.loadFont(getClass()
+                .getResourceAsStream("/images/boston caps.ttf"), 60));
+		
+		text.setFill(Color.WHITE);
 		
 		this.gc.setFill(Color.WHITE);										//set font color of text
 		this.gc.fillText("Game Over!", GameStage.WINDOW_WIDTH*0.4, GameStage.WINDOW_HEIGHT*0.45);
 		
-		if(this.condition == 1) this.gc.fillText("YOU WIN!", GameStage.WINDOW_WIDTH*0.4, GameStage.WINDOW_HEIGHT*0.6);
-		else this.gc.fillText("YOU LOSE!", GameStage.WINDOW_WIDTH*0.4, GameStage.WINDOW_HEIGHT*0.6);
+		this.gc.fillText(score, GameStage.WINDOW_WIDTH*0.4, GameStage.WINDOW_HEIGHT*0.6);
+		//else this.gc.fillText("YOU LOSE!", GameStage.WINDOW_WIDTH*0.4, GameStage.WINDOW_HEIGHT*0.6);
 		
 		Button exitbtn = new Button("Exit Game");
 		this.addEventHandler(exitbtn);
-		
-		
 		pane.getChildren().add(this.canvas);
 		pane.getChildren().add(exitbtn);
 	}

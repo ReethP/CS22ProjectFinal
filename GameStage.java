@@ -21,7 +21,6 @@ public class GameStage extends Stage{
 	private Canvas canvas;
 	private GraphicsContext gc;
 	private GameTest gametest;
-	private Integer condition;
 	
 	
 	
@@ -34,12 +33,7 @@ public class GameStage extends Stage{
 		this.canvas = new Canvas(GameStage.WINDOW_WIDTH,GameStage.WINDOW_HEIGHT);	
 		this.gc = canvas.getGraphicsContext2D();
 		//instantiate an animation timer
-		this.gametest = new GameTest(this.gc,this.scene, this.stage, this.mainscene, this.root);
-		
-		
-	
-		
-		this.condition = 1;
+		this.gametest = new GameTest(this.gc,this.scene, this.stage, this.mainscene, this.root,this);
 	}
 
 	//method to add the stage elements
@@ -56,10 +50,6 @@ public class GameStage extends Stage{
 		this.stage.show();
 	}
 	
-   
-	
-	public void makeLose() {this.condition = 0;}
-	
     public Scene getScene(Scene scene) {
         return this.scene;
     }
@@ -71,13 +61,14 @@ public class GameStage extends Stage{
         return this.stage;
     }
 	
-	protected void setGameOver(){
-		
+	protected void setGameOver(Integer score){
+		System.out.println("Marker");
+		System.out.println(score);
 		PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
 		pause.setOnFinished(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent arg0) {
+			public void handle(ActionEvent arg) {
 				// TODO Auto-generated method stub
-				GameOverStage gameover = new GameOverStage(condition);
+				GameOverStage gameover = new GameOverStage(score);
 				stage.setScene(gameover.getScene());
 			}
 		});
