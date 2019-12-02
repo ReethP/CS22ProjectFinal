@@ -1,5 +1,6 @@
 package Game;
 
+import java.io.File;
 import java.util.Timer;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -8,12 +9,14 @@ import java.util.TimerTask;
 import java.util.ArrayList;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.media.Media;
 import javafx.scene.paint.Color;
 import javafx.scene.image.Image;
 import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.input.MouseEvent;
 import java.util.concurrent.TimeUnit;
+import javafx.scene.media.MediaPlayer;
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.GraphicsContext;
 
@@ -34,6 +37,8 @@ public class GameTest extends AnimationTimer{
 	public final Image scoreboard = new Image("images/score.png",200, 70,false,false);
 	public final Image flag1 = new Image("images/exit1.png",90, 90,false,false);
 	public static Integer counter = 120;
+	//public final Media molehit;
+	//public final MediaPlayer mediaPlayer;
 	private Text time;
 	private Group root;
 	private Integer myscore;
@@ -53,8 +58,11 @@ public class GameTest extends AnimationTimer{
         this.myscore = 0;
         this.holes = new ArrayList<Hole>();
         makeHoles(this.holes);
-        this.handleMouseEvent(this.holes);
-        timer();  
+    	//String musicFile = "soundfiles/HitSFX.mp3";
+    	//this.molehit = new Media(new File(musicFile).toURI().toString());
+    	//this.mediaPlayer = new MediaPlayer(molehit);
+    	this.handleMouseEvent(this.holes);
+        timer();
     }
     
     public void handle(long currentNanoTime) {
@@ -83,8 +91,6 @@ public class GameTest extends AnimationTimer{
 		time.setFill(Color.WHITE);
 		root.getChildren().add(time);
         
-        
-
         /*
         Try to spawn moles every 2 seconds using startsec and currentsec
         spawned is necessary as due to the nature of the current implemention
@@ -105,7 +111,7 @@ public class GameTest extends AnimationTimer{
             System.out.println(startSec);
             for(Hole hole:this.holes){
                 if(!hole.hasMole()) {
-                	hole.tryUnhideMole();
+                	hole.tryUnhideMole(this.counter);
                 }
             }
             this.spawned = 1;}
@@ -167,7 +173,6 @@ public class GameTest extends AnimationTimer{
                 min = mm.toString();
                 if(counter==0) {
                 	timer.cancel();
-                	
                 }
             }
         }, 1000, 1000);//this line starts the timer at the same time its executed
@@ -182,13 +187,12 @@ public class GameTest extends AnimationTimer{
 					stage.setScene(scene);
 				}
 				for(Hole hole:holes){
-					if (hole.getBounds().contains(e.getX(),e.getY())){
-						System.out.println("Hole clicked!");
-						// myscore-=2;
-					}else if (hole.checkMole() && hole.getMole().getBounds().contains(e.getX(),e.getY())){
+					if(hole.checkMole() && hole.getMole().getBounds().contains(e.getX(),e.getY())){
 						System.out.println("Mole clicked!");
-						hole.hideMole();
-						myscore+=2;
+						hole.getMole().reduceHits();
+						if(hole.getMole().getHits() <= 0){
+							hole.hideMole();
+							myscore+=hole.getMole().addScore();}
 						//add score if mole is clicked. Hide the mole
 					}
 				}
