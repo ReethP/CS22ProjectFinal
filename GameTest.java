@@ -19,12 +19,14 @@ import java.util.concurrent.TimeUnit;
 import javafx.scene.media.MediaPlayer;
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.ImageCursor;
 
 
 
 public class GameTest extends AnimationTimer{
 	private Stage stage;
 	private Scene menuScene;
+	private GameStage gamestage;
 	private long start;
 	private Scene scene;
 	private ArrayList <Hole> holes;
@@ -37,8 +39,7 @@ public class GameTest extends AnimationTimer{
 	public final Image scoreboard = new Image("images/score.png",200, 70,false,false);
 	public final Image flag1 = new Image("images/exit1.png",90, 90,false,false);
 	public static Integer counter = 120;
-	//public final Media molehit;
-	//public final MediaPlayer mediaPlayer;
+	private ImageCursor cursor;
 	private Text time;
 	private Group root;
 	private Integer myscore;
@@ -47,12 +48,13 @@ public class GameTest extends AnimationTimer{
 	String sec;
 
     //Constructor
-    public GameTest(GraphicsContext gc, Scene scene, Stage gamestage,Scene scene1, Group root){
+    public GameTest(GraphicsContext gc, Scene scene, Stage stage,Scene scene1, Group root,GameStage gamestage){
     	this.root =  root;
-    	this.stage = gamestage;
+    	this.stage = stage;
     	this.scene = scene1;
     	this.menuScene = scene;
     	this.start = System.nanoTime();
+    	timer();
         this.gc = gc;
         this.spawned = 0;
         this.myscore = 0;
@@ -62,7 +64,10 @@ public class GameTest extends AnimationTimer{
     	//this.molehit = new Media(new File(musicFile).toURI().toString());
     	//this.mediaPlayer = new MediaPlayer(molehit);
     	this.handleMouseEvent(this.holes);
-        timer();
+    	this.gamestage = gamestage;
+    	this.cursor = new ImageCursor(new Image("images/MALLETFINAL.png"));
+    	menuScene.setCursor(cursor);
+        
     }
     
     public void handle(long currentNanoTime) {
@@ -107,8 +112,6 @@ public class GameTest extends AnimationTimer{
         long startSec = TimeUnit.NANOSECONDS.toSeconds(this.start);
         if((currentSec - startSec)%2 == 0){
             if(this.spawned == 0){
-            System.out.println(currentSec);
-            System.out.println(startSec);
             for(Hole hole:this.holes){
                 if(!hole.hasMole()) {
                 	hole.tryUnhideMole(this.counter);
@@ -118,8 +121,6 @@ public class GameTest extends AnimationTimer{
             }
             else{
                 this.spawned = 0;
-                System.out.println(currentSec);
-                System.out.println(startSec);
             }
 
         //Render moles
@@ -132,6 +133,7 @@ public class GameTest extends AnimationTimer{
         for(Hole hole:this.holes){
         	hole.render(this.gc);
         }
+        if(counter <= 0) {this.stop();this.gamestage.setGameOver(this.myscore);}
     }
     
     //Initialize holes and add holes to hole array

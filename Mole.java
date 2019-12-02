@@ -80,7 +80,6 @@ public class Mole extends Sprite implements Runnable{
 	public void run(){
 		while(this.time>0){
 			this.time = this.time-1;
-			System.out.println(time);
 			try{Thread.sleep(1000);}catch (InterruptedException e){}
 		}
 		this.hidden = true;
