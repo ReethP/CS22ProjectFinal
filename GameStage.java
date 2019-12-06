@@ -3,6 +3,7 @@ package Game;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import java.util.ArrayList;
 import javafx.util.Duration;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -25,7 +26,7 @@ public class GameStage extends Stage{
 	
 	
 	//the class constructor
-	public GameStage(Stage stage,Scene menuScene) {
+	public GameStage(Stage stage,Scene menuScene,ArrayList<String> highscores) {
 		this.stage = stage;
 		this.root = new Group();
 		this.scene = new Scene(root, GameStage.WINDOW_WIDTH,GameStage.WINDOW_HEIGHT);	
@@ -33,7 +34,7 @@ public class GameStage extends Stage{
 		this.canvas = new Canvas(GameStage.WINDOW_WIDTH,GameStage.WINDOW_HEIGHT);	
 		this.gc = canvas.getGraphicsContext2D();
 		//instantiate an animation timer
-		this.gametest = new GameTest(this.gc,this.scene, this.stage, this.mainscene, this.root,this);
+		this.gametest = new GameTest(this.gc,this.scene, this.stage, this.mainscene, this.root,this,highscores);
 	}
 
 	//method to add the stage elements
@@ -61,14 +62,14 @@ public class GameStage extends Stage{
         return this.stage;
     }
 	
-	protected void setGameOver(Integer score){
+	protected void setGameOver(Integer score,ArrayList<String> highscores){
 		System.out.println("Marker");
 		System.out.println(score);
 		PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
 		pause.setOnFinished(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent arg) {
 				// TODO Auto-generated method stub
-				GameOverStage gameover = new GameOverStage(score);
+				GameOverStage gameover = new GameOverStage(score,highscores);
 				stage.setScene(gameover.getScene());
 			}
 		});

@@ -38,7 +38,7 @@ public class GameTest extends AnimationTimer{
 	public final Image timer = new Image("images/timer.png",120, 50,false,false);
 	public final Image scoreboard = new Image("images/score.png",200, 70,false,false);
 	public final Image flag1 = new Image("images/exit1.png",90, 90,false,false);
-	public static Integer counter = 120;
+	public static Integer counter = 121;
 	private ImageCursor cursor;
 	private Text time;
 	private Group root;
@@ -46,9 +46,10 @@ public class GameTest extends AnimationTimer{
 	private Text text;
 	String min;
 	String sec;
+	private ArrayList<String> highscores;
 
     //Constructor
-    public GameTest(GraphicsContext gc, Scene scene, Stage stage,Scene scene1, Group root,GameStage gamestage){
+    public GameTest(GraphicsContext gc, Scene scene, Stage stage,Scene scene1, Group root,GameStage gamestage,ArrayList<String> highscores){
     	this.root =  root;
     	this.stage = stage;
     	this.scene = scene1;
@@ -67,6 +68,7 @@ public class GameTest extends AnimationTimer{
     	this.gamestage = gamestage;
     	this.cursor = new ImageCursor(new Image("images/MALLETFINAL.png"));
     	menuScene.setCursor(cursor);
+    	this.highscores = highscores;
         
     }
     
@@ -133,7 +135,7 @@ public class GameTest extends AnimationTimer{
         for(Hole hole:this.holes){
         	hole.render(this.gc);
         }
-        if(counter <= 0) {this.stop();this.gamestage.setGameOver(this.myscore);}
+        if(counter <= 0) {this.stop();this.gamestage.setGameOver(this.myscore,this.highscores);}
     }
     
     //Initialize holes and add holes to hole array

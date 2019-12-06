@@ -1,5 +1,7 @@
 package Game;
 
+import java.util.ArrayList;
+
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -22,13 +24,25 @@ public class GameOverStage {
 	private Integer score;
 	private Text text;
 	public final Image bg = new Image("images/background.jpg",768, 460.8,false,false);
+	private ArrayList<Integer> highscores;
 	
-	GameOverStage(Integer score){
+	GameOverStage(Integer score,ArrayList<String> highscores){
+		this.highscores = new ArrayList <Integer>(3);
 		this.pane = new StackPane();
 		this.scene = new Scene(pane, GameStage.WINDOW_WIDTH,GameStage.WINDOW_HEIGHT);
 		this.canvas = new Canvas(GameStage.WINDOW_WIDTH, GameStage.WINDOW_HEIGHT);
 		this.gc = canvas.getGraphicsContext2D();
 		this.score = score;
+		for(String i:highscores) {
+			this.highscores.add(Integer.valueOf(i));
+		}
+		for(int i = 0;i<3;i++) {
+			if(score>this.highscores.get(i)){
+				this.highscores.remove(i);
+				this.highscores.add(i,score);
+				break;
+			}
+		}
 		this.setProperties();
 		
 		
